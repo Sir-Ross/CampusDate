@@ -1,5 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
-
+/*
 //Connection URL
 const {uri} = require('./config.json');
 
@@ -30,5 +29,73 @@ async function run() {
   }
 }
 
-run();
+//run();
 //console.log("Test");
+*/
+/*const { MongoClient, ServerApiVersion } = require("mongodb");
+const mongodb = require("mongo-ssh");
+
+async function init(){
+  let connection;
+  let collections = [];
+  let databases = [];
+  try {
+    //Configure connection
+    connection = await mongodb.connect(
+      {
+        host: `${host}`,
+        port: 220,
+        user: `${user}`,
+        password: `${pass}`,
+      },
+      {
+        host: "127.0.0.1",
+        port: 27017,
+        user: "campusdate",
+        password: `${pass}`,
+        database: `${db}`
+      }
+    );
+
+    databases = await connection.client.db("root").admin().listDatabases();
+    await connection.client.db(`${db}`).listCollections().toArray()
+      .then(data=>{
+        data.forEach(item => collections.push(item.name));
+      }).catch(err=>{
+        console.error("Database read error.");
+        throw err;
+      });
+      console.log("Databases: ",databases);
+      console.log("Collections: ",collections);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        throw err;
+      }
+    }
+  }
+}*/
+
+//init();
+
+const mongoose = require('mongoose');
+const { uri, host, port, user, pass, db} = require('./config.json');
+main().catch(err => console.log(err));
+
+async function main() {
+
+  console.log("Connecting.");
+  //const conn = mongoose.createConnection(`mongodb://${user}:${pass}@apollo.arcator.co.uk:220/campusdate`)
+  mongoose.connect(`mongodb://${user}:${pass}@apollo.arcator.co.uk:220/campusdate`)
+    .catch(error => handleError(error));
+  //await mongoose.connect(`mongodb://${user}:${pass}@apollo.arcator.co.uk:220/campusdate`)
+  console.log("Connected.");
+  //const userSchema = new Schema({ name: String, email: String});
+  //module.exports = userSchema;
+  //const UserModel = conn.model('campusdate', userSchema);
+
+}
